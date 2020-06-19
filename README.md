@@ -10,6 +10,7 @@
 ### 公司项目前端工程化建设、性能优化
 ### 算法
 ### 爬虫
+### nginx
 ### Jenkins
 ### Node、Koa、Express
 
