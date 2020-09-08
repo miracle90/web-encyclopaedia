@@ -5,6 +5,7 @@
 ### Service Worker
 ### 服务端渲染
 ### Web Worker
+### websocket
 ### Webpack原理及应用
 ### 网络
 ### 公司项目前端工程化建设、性能优化
@@ -18,5 +19,7 @@
 ### Canvas
 ### 3D（WebGL、three.js）
 ### typescript
+### taro
+### 微信小程序（原理、性能优化）
 
 
