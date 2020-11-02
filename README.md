@@ -57,6 +57,8 @@
 
 1. Service Worker
 2. Web Worker
+3. 浏览器工作原理
+4. v8
 
 ### typescript
 
