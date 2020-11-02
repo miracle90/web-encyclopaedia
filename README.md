@@ -35,6 +35,7 @@
 2. http/https
 3. tcp/udp
 4. http2/http3
+5. cdn
 
 ### 服务端
 
@@ -80,6 +81,15 @@
 
 * 资源预加载（图片、js、css。。。）
 * 内存泄漏
+
+### 工具链
+
+* 浏览器（performance、memory）
+* tinyPNG
+* can i use
+* postman
+* 抓包 => Charles
+* 内存测试 => PerfDog
 
 ### 算法
 
