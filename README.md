@@ -56,18 +56,27 @@
 
 ### 浏览器
 
-1. Service Worker
-2. Web Worker
-3. 浏览器工作原理
-4. v8
+* Service Worker
+* Web Worker
+* 浏览器工作原理
+* v8
+* 内存泄漏
+* 垃圾回收机制
 
 ### typescript
 
+* 使用TS的优势
+
 ### Webpack
+
+* tree-shaking的原理
 
 ### 微前端
 
 ### 前端监控
+
+* window.onerror
+* performance
 
 ### 数据库
 
@@ -94,7 +103,7 @@
 * 抓包 => Charles
 * 内存测试 => PerfDog
 
-### 算法
+### 算法&数据结构
 
 ### 爬虫
 
@@ -114,4 +123,10 @@
 
 ### 团队管理
 
+### 笔试题
+
+* 实现数组去重
+* 类数组转化为数组
+* 防抖节流
+* 用JS代码实现事件代理
 
