@@ -1,8 +1,15 @@
 ## 架构师
 
+### html
+
+
 ### css
 
 * 什么情况下出现浏览器分层？(css部分)
+
+### javascript
+
+* setTimeout、setInterval、requestAnimationFrame
 
 ### 虚拟现实
 
