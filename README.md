@@ -116,11 +116,19 @@
 * 抓包 => Charles
 * 内存测试 => PerfDog
 
+### pwa
+
 ### 算法&数据结构
 
 ### 爬虫
 
+* 接口请求
+* crawl
+* puppeteer
+
 ### nginx
+
+### 设计模式
 
 ### Jenkins
 
