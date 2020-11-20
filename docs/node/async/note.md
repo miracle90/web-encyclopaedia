@@ -12,3 +12,5 @@
 - 函数返回一个函数
 
 ### aop 面向切片编程
+
+git config --global user.email
