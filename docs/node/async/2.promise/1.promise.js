@@ -1,24 +1,47 @@
-// Promise 是一个类 异步解决方案
-// pending 等待状态
-// fulfilled 成功态
-// rejected 失败态
+// promise怎么变成失败态 reject、new Error()
 
-// executor执行器，会立即执行
+// const Promise = require('./promise')
 
-// 每个promise实例都有一个then方法，接受两个函数，onfulfilled，onrejected
+let fs = require('fs')
+// const Promise = require('./history/1.基本的promise/promise')
 
-const Promise = require('./promise')
+// fs.readFile('./docs/node/async/2.promise/name.txt', 'utf8', function (err, data) {
+//   fs.readFile(`./docs/node/async/2.promise/${data}`, 'utf8', function (err, data) {
+//     console.log(data)
+//   })
+// })
 
-let promise = new Promise(function (resolve, reject) {
-  // resolve('成功')
-  // reject('失败')
-  throw new Error('报错')
+function read(url) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(`./docs/node/async/2.promise/${url}`, 'utf8', function (err, data) {
+      if (err) {
+        return reject(err)
+      }
+      resolve(data)
+    })
+  })
+}
+
+// 链式调用
+// 每一个then方法返回新的promise
+read('name.txt').then(data => {
+  // 如果返回的是一个promise，会让这个promise执行，并且采用他的状态座位下一个then的值
+  return read(data)
+}).then(data => {
+  console.log(data)
+  return 100
+}, err => {
+  console.log('err', err)
+}).then(data => {
+  console.log(data)
 })
 
-promise.then(function (val) {
-  console.log('onfulfilled ', val)
-}, function (err) {
-  console.log('onrejected ', err)
-})
+// let promise = new Promise(function (resolve, reject) {
+//   resolve()
+// })
+
+// promise.then(function (data) {
+//   console.log(data)
+// })
 
 

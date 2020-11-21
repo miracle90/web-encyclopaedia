@@ -36,24 +36,27 @@ function Promise(executor) {
 
 Promise.prototype.then = function (onfulfilled, onrejected) {
   const self = this
-  console.log(this.status)
-  // 如果成功，调用 onfulfilled
-  if (this.status === 'fulfilled') {
-    onfulfilled(this.value)
-  }
-  // 如果失败，调用 onrejected
-  if (this.status === 'rejected') {
-    onrejected(this.reason)
-  }
-  if (this.status === 'pending') {
-    // 异步任务，then执行的时候，还是pending态，成功、回调存起来，发布订阅模式
-    this.onResolveCallbacks.push(function () {
-      onfulfilled(self.value)
-    })
-    this.onRejectCallbacks.push(function () {
-      onrejected(self.reason)
-    })
-  }
+  // 返回一个promise，实现then链式调用
+  let promise2 = new Promise(function (resolve, reject) {
+    // 如果成功，调用 onfulfilled
+    if (this.status === 'fulfilled') {
+      onfulfilled(this.value)
+    }
+    // 如果失败，调用 onrejected
+    if (this.status === 'rejected') {
+      onrejected(this.reason)
+    }
+    if (this.status === 'pending') {
+      // 异步任务，then执行的时候，还是pending态，成功、回调存起来，发布订阅模式
+      this.onResolveCallbacks.push(function () {
+        onfulfilled(self.value)
+      })
+      this.onRejectCallbacks.push(function () {
+        onrejected(self.reason)
+      })
+    }
+  })
+  return promise2
 }
 
 module.exports = Promise
