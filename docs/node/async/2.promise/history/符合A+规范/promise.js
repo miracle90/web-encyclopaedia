@@ -1,7 +1,5 @@
 // Promise A+规范
 
-const { resolve } = require("path")
-
 
 function Promise(executor) {
   // 给promise定义状态
@@ -17,19 +15,12 @@ function Promise(executor) {
   let self = this
 
   function resolve(value) {
-    if (value instanceof Promise) {
-      return value.then(resolve, reject)
-    }
-    // if (value !== null && (typeof value === 'object' || typeof value === 'function')) {
-    //   if (value.then && typeof value.then === 'function') {
-    //     return value.then(resolve, reject)
-    //   }
-    // }
     if (self.status === 'pending') {
       self.value = value
       self.status = 'fulfilled'
       self.onResolveCallbacks.forEach(cb => cb())
     }
+
   }
 
   function reject(reason) {
@@ -160,11 +151,6 @@ Promise.prototype.then = function (onfulfilled, onrejected) {
   return promise2
 }
 
-// catch是then的简写
-Promise.prototype.catch = function (errCallback) {
-  return this.then(null, errCallback)
-}
-
 // 请实现一个延迟对象
 Promise.deferred = function () {
   let dfd = {}
@@ -173,67 +159,6 @@ Promise.deferred = function () {
     dfd.reject = reject
   })
   return dfd
-}
-
-// 实现一个finally
-
-Promise.resolve = function (value) {
-  return new Promise((resolve, reject) => {
-    resolve(value)
-  })
-}
-
-Promise.reject = function (reason) {
-  return new Promise((resolve, reject) => {
-    reject(reason)
-  })
-}
-
-Promise.all = function (values) {
-  return new Promise((resolve, reject) => {
-    let arr = []
-    let count = 0
-    function processData(key, value) {
-      arr[key] = value
-      if (++count === values.length) {
-        resolve(arr)
-      }
-    }
-
-    for (let i = 0; i < values.length; i++) {
-      let current = values[i]
-      let then = current.then
-      if (then && typeof then === 'function') {
-        // 是promise，就让promise执行
-        then.call(current, y => {
-          processData(i, y)
-          // 如果其中一个promise出错，就停止执行
-        }, reject)
-      } else {
-        // 常量直接返回结果
-        processData(i, current)
-      }
-    }
-  })
-}
-
-Promise.race = function (values) {
-  return new Promise((resolve, reject) => {
-    for (let i = 0; i < values.length; i++) {
-      let current = values[i]
-      let then = current.then
-      if (then && typeof then === 'function') {
-        // 是promise，就让promise执行
-        then.call(current, y => {
-          resolve(y)
-          // 如果其中一个promise出错，就停止执行
-        }, reject)
-      } else {
-        // 常量直接返回结果
-        resolve(current)
-      }
-    }
-  })
 }
 
 module.exports = Promise
