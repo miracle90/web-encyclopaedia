@@ -16,6 +16,7 @@
 ### node
 
 * 异步
+* 时间循环
 
 ### 虚拟现实
 
@@ -31,6 +32,7 @@
 ### 动画
 
 * GPU渲染
+* animation
 
 ### 数据可视化
 
@@ -42,13 +44,14 @@
 
 1. cocos
 
-### 网络
+### [网络](https://github.com/miracle90/web-encyclopaedia/blob/master/docs/network/note.md)
 
-1. websocket
-2. http/https
-3. tcp/udp
-4. http2/http3
-5. cdn
+* OSI七层模型
+* http/https
+* tcp/udp
+* http2/http3
+* cdn
+* websocket
 
 ### 服务端
 
