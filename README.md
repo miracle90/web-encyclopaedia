@@ -2,7 +2,6 @@
 
 ### html
 
-
 ### css
 
 * 什么情况下出现浏览器分层？(css部分)
@@ -17,8 +16,6 @@
 
 * 异步
 * 时间循环
-
-### 虚拟现实
 
 ### 移动端
 
@@ -39,10 +36,6 @@
 1. Canvas
 2. echarts
 3. 3D（WebGL、three.js）
-
-### 游戏
-
-1. cocos
 
 ### [网络](https://github.com/miracle90/web-encyclopaedia/blob/master/docs/network/note.md)
 
@@ -87,6 +80,10 @@
 
 * tree-shaking的原理
 
+### 微信小程序
+
+* 采坑记录
+
 ### 微前端
 
 * qiankun
@@ -123,7 +120,7 @@
 
 ### pwa
 
-### 算法&数据结构
+### 算法 & 数据结构
 
 ### 爬虫
 
@@ -159,6 +156,12 @@
 ### 技术架构
 
 ### 团队管理
+
+### VR、AR
+
+### 游戏
+
+1. cocos
 
 ### 其他范畴
 
