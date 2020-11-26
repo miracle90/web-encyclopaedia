@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app"></div>
+  <script>
+    // 消息通道，webWorker开一个子线程，postMessage
+    let channel = new MessageChannel()
+    let port1 = channel.port1
+    let port2 = channel.port2
+    port2.postMessage('发消息')
+    console.log(1)
+    // vue.nextTick 以前使用这个方式实现的，后面废弃了
+    port1.onmessage = function (e) {
+      console.log(e.data)
+    }
+    console.log('2')
+    // setImmediate(function () {
+    //   console.log('setImmediate')
+    // })
+  </script>
+</body>
+</html>
