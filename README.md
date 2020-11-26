@@ -2,7 +2,6 @@
 
 ### html
 
-
 ### css
 
 * 什么情况下出现浏览器分层？(css部分)
@@ -16,8 +15,7 @@
 ### node
 
 * 异步
-
-### 虚拟现实
+* 时间循环
 
 ### 移动端
 
@@ -31,6 +29,7 @@
 ### 动画
 
 * GPU渲染
+* animation
 
 ### 数据可视化
 
@@ -38,17 +37,14 @@
 2. echarts
 3. 3D（WebGL、three.js）
 
-### 游戏
+### [网络](https://github.com/miracle90/web-encyclopaedia/blob/master/docs/network/note.md)
 
-1. cocos
-
-### 网络
-
-1. websocket
-2. http/https
-3. tcp/udp
-4. http2/http3
-5. cdn
+* OSI七层模型
+* http/https
+* tcp/udp
+* http2/http3
+* cdn
+* websocket
 
 ### 服务端
 
@@ -80,9 +76,15 @@
 
 * 使用TS的优势
 
+### gulp
+
 ### Webpack
 
 * tree-shaking的原理
+
+### 微信小程序
+
+* 采坑记录
 
 ### 微前端
 
@@ -117,10 +119,11 @@
 * postman
 * 抓包 => Charles
 * 内存测试 => PerfDog
+* Wireshark => 网络封包分析软件
 
 ### pwa
 
-### 算法&数据结构
+### 算法 & 数据结构
 
 ### 爬虫
 
@@ -128,7 +131,19 @@
 * crawl
 * puppeteer
 
+### webRTC
+
 ### nginx
+
+### web安全
+
+* 运营商劫持 => csp
+* xss
+* csrf
+* 加密算法
+* md5
+
+### serverless
 
 ### 设计模式
 
@@ -145,6 +160,12 @@
 ### 技术架构
 
 ### 团队管理
+
+### VR、AR
+
+### 游戏
+
+1. cocos
 
 ### 其他范畴
 
