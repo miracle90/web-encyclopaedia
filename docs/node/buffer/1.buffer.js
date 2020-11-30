@@ -1,7 +1,5 @@
 // 每个汉字node只支持utf8编码（一个汉字3个字节），gbk编码（一个汉字2个字节）
 
-const { concat } = require("../common/sum")
-
 // 如果编码不同，会出现乱码问题
 
 // iconv-lite 靠第三方模块转化编码
