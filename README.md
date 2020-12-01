@@ -72,6 +72,8 @@
 * 内存泄漏
 * 垃圾回收机制
 
+> [图解浏览器的基本工作原理](https://zhuanlan.zhihu.com/p/47407398)
+
 ### typescript
 
 * 使用TS的优势
