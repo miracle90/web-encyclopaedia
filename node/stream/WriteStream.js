@@ -102,3 +102,7 @@ class WritableStream extends EventEmitter {
 }
 
 module.exports = WritableStream
+
+// 异步间拆分逻辑
+
+// 多个异步如何串行

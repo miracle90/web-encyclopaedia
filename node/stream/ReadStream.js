@@ -75,6 +75,28 @@ class ReadStream extends EventEmitter {
       }
     })
   }
+
+  pause() {
+    this.flowing = false
+  }
+  
+  resume() {
+    this.flowing = true
+    this.read()
+  }
+
+  pipe(ws) {
+    this.on('data', function (chunk) {
+      let flag = ws.write(chunk)
+      if (!flag) {
+        this.pause()
+      }
+    })
+
+    ws.on('drain', () => {
+      this.resume()
+    })
+  }
 }
 
 module.exports = ReadStream
