@@ -1,7 +1,7 @@
 
 let WriteStream = require('./WriteStream')
 
-let ws = WriteStream('./name.txt', {
+let ws = new WriteStream('./name.txt', {
   flags: 'w',
   mode: 0o666,
   autoClose: true,
