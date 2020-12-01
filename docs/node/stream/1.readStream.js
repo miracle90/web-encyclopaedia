@@ -7,7 +7,7 @@ let rs = fs.createReadStream('./name.txt', {
   flags: 'r',    // 打开文件作甚么事
   highWaterMark: 1,    // 限制每次读多少，字节数，默认 64 * 1024，64kb
   mode: 0o666,   // 可读可写
-  start: 4,   // 开始读取的位置
+  start: 0,   // 开始读取的位置
   // end: 2,    // 结束读取的位置
   // encoding: 'utf8',
   autoClose: true
