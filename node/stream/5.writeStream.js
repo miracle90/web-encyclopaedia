@@ -6,14 +6,21 @@ let ws = new WriteStream('./name.txt', {
   mode: 0o666,
   autoClose: true,
   encoding: 'utf8',
-  highWaterMark: 2 
+  highWaterMark: 4,
+  start: 0
 })
+
+// let flag = ws.write(1 + '')
+// console.log(flag)
 
 let i = 9
 function write() {
   let flag = true
   while (i && flag) {
-    flag = ws.write(i-- + '')
+    flag = ws.write(i-- + '', 'utf8', () => {
+      console.log('callback')
+    })
+    // write方法只能放字符串或者buffer
   }
 }
 write()
