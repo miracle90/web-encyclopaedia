@@ -55,6 +55,8 @@
 * cdn
 * websocket
 
+> [CDN工作原理及其在淘宝图片业务中的应用](https://mp.weixin.qq.com/s/5Pyhygt6XhPnAt_j36tQpw)
+
 ### 服务端
 
 1. Node
