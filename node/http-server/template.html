@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="">
+    <title>当前目录内容</title>
+  </head>
+  <body>
+    <!-- [a, b, v] -->
+    <ul>
+      <% arr.forEach(item => { %>
+        <li>
+          <a href="<%=item.href%>" target="_self"><%=item.dir%></a>
+        </li>
+      <% }) %>
+    </ul>
+    <script src="" async defer></script>
+  </body>
+</html>

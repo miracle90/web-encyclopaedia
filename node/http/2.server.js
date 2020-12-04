@@ -1,5 +1,5 @@
 let http = require('http')
-
+let querystring = require('querystring')
 
 let server = http.createServer()
 // let server = http.createServer((req, res) => {
@@ -18,17 +18,29 @@ server.on('request', (req, res) => {
   console.log(req.url)
   console.log(req.httpVersion)
   // 请求头
-  console.log(req.headers)
+  // console.log(req.headers)
   // 请求体
   let arr = []
   req.on('data', chunk => {
+    console.log('chunk ', chunk)
     arr.push(chunk)
   })
   req.on('end', () => {
-    console.log(Buffer.concat(arr).toString())
+    let str = Buffer.concat(arr).toString()
+    console.log('str ', str)
+    let obj = {}
+    if (req.headers['content-type'] === 'application/x-www-form-urlencoded') {
+      obj = querystring.parse(str)
+    }
+    if (req.headers['content-type'] === 'application/json') {
+      obj = JSON.parse(str)
+    }
+    if (req.headers['content-type'] === 'multipart/form-data') {
+      // 上传文件
+    }
     res.statusCode = 200
     res.setHeader('a', '1')
-    res.end('hello world')
+    res.end(`${obj.name + obj.age}`)
   })
 })
 
