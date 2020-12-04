@@ -1,5 +1,14 @@
 ## 架构师
 
+### 进阶顺序
+
+* 1. node
+* 2. express、koa、egg.js
+* 3. 数据库 MySQL、Redis、MongoDB
+* 4. 爬虫
+* 5. webpack
+。。。
+
 ### html
 
 ### css
@@ -77,6 +86,13 @@
 ### typescript
 
 * 使用TS的优势
+
+### 构建工具
+
+* webpack
+* gulp
+* rollup
+* parcel
 
 ### gulp
 
@@ -197,13 +213,3 @@
 * 类数组转化为数组
 * 防抖节流
 * 用JS代码实现事件代理
-
-### 进阶顺序
-
-* 1. node
-* 2. express、koa、egg.js
-* 3. 数据库 MySQL、Redis、MongoDB
-* 4. 爬虫
-* 5. webpack
-。。。
-
