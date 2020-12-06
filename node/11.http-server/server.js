@@ -45,8 +45,40 @@ class Server {
     res.statusCode = 404
     res.end('NOT FOUND')
   }
+  // 缓存策略
+  cache(req, res, statObj, absPath) {
+    let lastModified = statObj.ctime.toUTCString()
+    let modifiedSince = req.headers['if-modified-since']
+    let etag = statObj.size + ''
+    let noneMatch = req.headers['if-none-match']
+    res.setHeader('Cache-Control', 'max-age=5')
+    res.setHeader('Last-Modified', lastModified)
+    res.setHeader('Etag', etag)
+    if (lastModified !== modifiedSince) {
+      return false
+    }
+    if (noneMatch !== etag) {
+      return false
+    }
+    return true
+  }
   sendFile(req, res, statObj, absPath) {
-    // 增加缓存
+    console.log(req.url)
+    // 强制缓存
+    // res.setHeader('Cache-Control', 'max-age=10')
+    // res.setHeader('Expires', new Date(Date.now() + 10 * 1000).toUTCString())
+
+    let client = req.headers['if-modified-since']
+    let server = statObj.ctime.toUTCString()
+    // 协商缓存
+    // 这种方式并不是很靠谱 => 时间变了，内容没有改；1s内的更改对比不出来
+    // 在真正的开发中，采用修改日期+文件大小作为etag
+    if (client === server) {
+      res.statusCode = 304
+      res.end()
+      return
+    }
+    res.setHeader('Last-Modified', server)
     res.setHeader('Content-Type', mime.getType(absPath) + ';charset=utf8')
     fs.createReadStream(absPath).pipe(res)
   }
