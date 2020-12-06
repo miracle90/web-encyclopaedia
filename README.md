@@ -167,7 +167,7 @@
 * 运营商劫持 => csp
 * xss
 * csrf
-* 加密算法
+* 加密算法（sha1、sha256、rsa、res）
 * md5
 
 ### serverless
