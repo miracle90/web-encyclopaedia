@@ -143,6 +143,7 @@
 * 抓包 => Charles
 * 内存测试 => PerfDog
 * Wireshark => 网络封包分析软件
+* 耗电测试
 
 ### pwa
 
