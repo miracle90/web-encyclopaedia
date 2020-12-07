@@ -9,6 +9,10 @@
 
 ### 断点续传
 
+* 状态码 => 206 Partial Content
+* 请求头 => Range:bytes=0-5
+* 响应头 => Content-Range: bytes 0-5/2381（当前范围/总长度）
+
 ### referer
 
 ### 判断内核
