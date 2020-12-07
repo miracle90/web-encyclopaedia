@@ -23,6 +23,7 @@
 - document.referrer
 - 来源 安全 xss csrf
 - 防盗链 => 根据 referer 和 host
+- 可以伪造
 
 ### gzip压缩
 
@@ -32,3 +33,6 @@
 - 视频图片一般不适用gzip压缩
 
 ### 代理
+
+- 正向代理
+- 反向代理
