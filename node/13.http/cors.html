@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+  </head>
+  <body>
+    cors
+    <script>
+      // axios 和 fetch 都是基于 promise
+      // 在浏览器中使用了多线程，web Worker，没有xhr对象，支持fetch api
+      let xhr = new XMLHttpRequest()
+      // 跨域默认不携带cookie，withCredentials设置为true才可以携带，服务端还需要配置 Access-Control-Allow-Credentials
+      xhr.withCredentials = true
+      xhr.open('post', 'http://localhost:3000/user', true)
+      xhr.setRequestHeader('Authorization', '1')
+      // 告诉服务器，返回的是一个json对象
+      xhr.responseType = 'json'
+      // 进度条 xhr.onprogress
+      // xhr.status === 200 & xhr.readyState === 4
+      xhr.onload = function () {
+        console.log(xhr.response)
+      }
+      xhr.send()
+    </script>
+  </body>
+</html>
