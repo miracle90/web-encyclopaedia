@@ -21,6 +21,19 @@
 
 * setTimeout、setInterval、requestAnimationFrame
 
+### vue
+
+### vue3.0
+
+* 性能提升
+* Tree Shaking支持，更小的文件大小
+* Composition Api新语法
+* Fragment/Teleport/Suspense新组件
+* 更好的Typescript支持
+* 自定义渲染器
+
+### React
+
 ### node
 
 * 异步
