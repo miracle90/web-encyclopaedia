@@ -10,26 +10,46 @@ function application() {
     let { pathname } = url.parse(req.url)
 
     let index= 0
-    function next() {
-      if (index >= app.routes.length) return res.end(`Cannot ${method} ${pathname}`)
+    // 如果有err，就找错误中间件
+    function next(err) {
+      if (index >= app.routes.length) {
+        if (err) {
+          // 如果没有捕获，会将错误返回
+          return res.send(err)
+        }
+        return res.end(`Cannot ${method} ${pathname}`)
+      }
+      
       let currentLayer = app.routes[index++]
-      if (currentLayer.method === 'middle') {
-        if (currentLayer.path === '/' || currentLayer.path === pathname || pathname.startsWith(currentLayer.path + '/')) {
-          return currentLayer.cb(req, res, next)
-        } else {
 
+      // 如果传递了错误参数
+      if (err) {
+        // 判断函数参数长度，为4则是错误处理
+        if (currentLayer.method === 'middle' && currentLayer.cb.length === 4) {
+          currentLayer.cb(err, req, res, next)
+        } else {
+          // 继续向下找，把参数带进去
+          next(err)
         }
       } else {
-        if (currentLayer.path.params) {
-          if (method === currentLayer.method && currentLayer.path.test(pathname)) {
-            let [, ...args] = pathname.match(currentLayer.path)
-            req.params = currentLayer.path.params.reduce((memo, current, index) => (memo[current] = args[index], memo), {})
-            return currentLayer.cb(req, res)
+        if (currentLayer.method === 'middle') {
+          if (currentLayer.path === '/' || currentLayer.path === pathname || pathname.startsWith(currentLayer.path + '/')) {
+            return currentLayer.cb(req, res, next)
+          } else {
+  
           }
-        } else if ((method === currentLayer.method || 'all' === currentLayer.method) && (pathname === currentLayer.path || currentLayer.path === '*')) {
-          return currentLayer.cb(req, res)
         } else {
-          next()
+          if (currentLayer.path.params) {
+            if (method === currentLayer.method && currentLayer.path.test(pathname)) {
+              let [, ...args] = pathname.match(currentLayer.path)
+              req.params = currentLayer.path.params.reduce((memo, current, index) => (memo[current] = args[index], memo), {})
+              return currentLayer.cb(req, res)
+            }
+          } else if ((method === currentLayer.method || 'all' === currentLayer.method) && (pathname === currentLayer.path || currentLayer.path === '*')) {
+            return currentLayer.cb(req, res)
+          } else {
+            next()
+          }
         }
       }
     }
@@ -104,5 +124,26 @@ function application() {
 
   return app
 }
+
+application.static = function (dirname) {
+  return function (req, res, next) {
+    let fs = require('fs')
+    let path = require('path')
+    let mime = require('mime')
+    let absPath = path.join(__dirname, req.path)
+    fs.stat(absPath, (err, statObj) => {
+      if (err) {
+        // 中间件无法处理，向下执行
+        return next(err)
+      }
+      // 如果是文件
+      if (statObj.isFile()) {
+        res.setHeader('Content-Type', mime.getType(absPath) + ';charset=utf8')
+        fs.createReadStream(absPath).pipe(res)
+      }
+    })
+  }
+}
+
 
 module.exports = application
