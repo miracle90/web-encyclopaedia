@@ -34,10 +34,20 @@
 
 ### React
 
+### 服务端
+
+1. Node
+2. Koa、Express
+3. egg.js
+4. 服务端渲染
+5. Next.js、Nuxt.js
+
 ### node
 
 * 异步
 * 时间循环
+
+### BFF
 
 ### 移动端
 
@@ -69,13 +79,6 @@
 * websocket
 
 > [CDN工作原理及其在淘宝图片业务中的应用](https://mp.weixin.qq.com/s/5Pyhygt6XhPnAt_j36tQpw)
-
-### 服务端
-
-1. Node
-2. Koa、Express
-3. egg.js
-4. 服务端渲染（nest.js）
 
 ### 跨平台
 
