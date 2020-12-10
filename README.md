@@ -3,10 +3,14 @@
 ### 进阶顺序
 
 * 1. node
-* 2. express、koa、egg.js
+* 2. express、koa
 * 3. 数据库 MySQL、Redis、MongoDB
 * 4. 爬虫
 * 5. webpack
+* 6. typescript
+* 7. egg.js
+* 8. 博客、聊天室项目
+* 9. 运维（nginx、docker、linux、Jenkins）
 。。。
 
 ### html
