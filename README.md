@@ -133,6 +133,8 @@
 
 * window.onerror
 * performance
+* 页面崩溃监控
+* 内存 performance.memory
 
 ### 数据库
 
