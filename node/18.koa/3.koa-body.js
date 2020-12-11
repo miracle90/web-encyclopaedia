@@ -22,7 +22,6 @@ app.use(static(__dirname))
 
 // 进度条 xhr.onprogress => e.loaded
 
-
 async function parser(form, req) {
   // return，不能写成await，要不然没有返回值
   return new Promise((resolve, reject) => {
