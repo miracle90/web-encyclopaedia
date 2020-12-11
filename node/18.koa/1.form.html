@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <form action="/upload" enctype="multipart/form-data" method="POST">
+    <!-- 用户名<input type="text" name="username">
+    密码<input type="text" name="password"> -->
+    文件上传<input type="file" id="input" name="avatar">
+    <button type="" id="btn">提交</button>
+  </form>
+
+  <script>
+    // 分片上传
+    // 断点续传
+    let file
+    // 每个分片都是10M大小
+    let size = 10 * 1024 * 1024
+    let num = 0
+    let filename
+    // 文件总大小
+    let totalSize
+    // 当前分段数量
+    let count
+    input.addEventListener('change', e => {
+      // file类型是一个二进制格式，blob
+      // new Blob
+      // console.log(e.target.files[0])
+      file = e.target.files[0]
+      // 当前选择的文件名
+      filename = file.name
+      totalSize = file.size
+      count = Math.ceil(totalSize / size)
+    })
+    // 并发上传，
+    function upload() {
+      let min = Math.min(size, totalSize - num * size)
+      // 传完了
+      if (min <= 0) return
+      let fd = new FormData()
+      fd.append('chunkNum', num)
+      fd.append('count', count)
+      fd.append('filename', filename)
+      fd.append('chunk', file.slice(num * size, num * size + min))
+      // 每次要上传的内容
+      uploadFile(fd)
+      num++
+      upload()
+    }
+
+    function uploadFile(fd) {
+      let xhr = new XMLHttpRequest()
+      xhr.open('get', '/upload', true)
+      xhr.onload = function () {}
+      xhr.send(fd)
+    }
+
+    btn.addEventListener('click', function () {
+      upload()
+      // let f = file.slice(0, 1)
+      // console.log(f)
+    })
+  </script>
+</body>
+</html>
