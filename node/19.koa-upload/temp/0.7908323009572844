@@ -1,0 +1,82 @@
+/**
+ * Created by huruqing on 2016/6/8 0008.
+ * qfang网资讯列表页
+ */
+
+// 立即运行函数
+(function(){
+    // 定义一个对象,页面的所有东西都在对象里进行
+    var listView = {
+        // 初始化
+        init: function() {
+            this.category = '百科';
+            // 绑定事件
+            this.bindEvens();
+            // 请求数据
+            this.queryList('01');
+        },
+
+        // 绑定事件
+        bindEvens: function() {
+            var self = this;
+            // 切换tap按钮
+            $('#info-tbs li').on('click', function(ev) {
+                // 防重复
+                if ($(this).hasClass('current')) {
+                    return false;
+                }
+                // 获取类别
+                self.category = $(this).text();
+                // 点击变高亮
+                $(this).addClass('current').siblings().removeClass('current');
+                // 获取tapId,供请求时使用
+                var tapId = '0' + ($(this).index()+1);
+                self.queryList(tapId);
+            });
+        },
+
+        // 渲染页面
+        render: function(data) {
+            var list = data.articleList;
+            var htmlStr = '';
+            for (var i=0;i<list.length;i++) {
+                // 拼接字符串
+                htmlStr += '<li><a href="detail.html?category='+this.category+'&id='+list[i].id+'"> <div class="list-pic">' +
+                    '<img src="'+list[i].imgUrl+'"></div> <div class="list-text">' +
+                    '<h3>'+list[i].title+'</h3> <p>'+list[i].abstract+'</p> </div> ' +
+                    '<div class="clearfix"></div> </a></li>';
+            }
+            $('#arc-list').html(htmlStr);
+        },
+
+        // 请求数据
+        queryList: function(tapId) {
+            var self = this;
+            $.ajax({
+                url: 'http://jehovah.com.cn/qfang/qfangList.php',
+                type: 'get',
+                // 请求参数
+                data: {
+                    // 后台需要前端穿过去的参数
+                    tap: tapId
+                },
+                dataType: 'json',
+                success: function(res) {
+                    // 调用渲染页面的方法渲染页面
+                    self.render(res);
+                },
+                error: function() {
+                    alert('网络异常,请稍后再试');
+                }
+            });
+        }
+    };
+    // 调用对象的初始化方法,执行初始化(入口)
+    listView.init();
+})();
+
+
+
+
+
+
