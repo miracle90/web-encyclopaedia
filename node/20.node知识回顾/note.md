@@ -18,5 +18,10 @@
 - Set，Map（去重 交差补）
 - Symbol（原始数据类型）
 - instanceof typeof
-- Object.defineProperty => proxy 递归
+- Object.defineProperty => proxy（可以解决数组问题 reflect） 递归
 - 数组常见方法 reduce filter map（compose redux原理 kao原理）
+- class
+
+## eventloop
+
+- 宏任务、微任务，script => 微任务 => 宏任务
