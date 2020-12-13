@@ -61,7 +61,31 @@ sun公司，卖给Oracle
 
 ## 数据操作
 
+代码建表
 
+关键字大写
 
+### 创建表格
+
+### 如何修改和增加表里的字段
+
+### 如何增加约束
+
+* 为表增加主键
+* 增加唯一约束
+* 增加默认约束
+* 主外键
+
+## SQL
+
+### SQL分类
+
+* DML => Data manipulate Language 数据操作语言（增删改查）
+* DDL => Data Define Language 数据定义语言，定义数据库和标的数据结构
+* DCL => Data Control Language 数据库控制语言，是用来设置或更改数据库用户或角色权限的语句，包括（grant,revoke等）语句
+
+### SQL运算符
+
+### 注意事项
 
 
