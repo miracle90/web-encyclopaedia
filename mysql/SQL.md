@@ -25,3 +25,9 @@ DELETE FROM student WHERE id = 2;
 -- DELETE FROM student
 
 ```
+
+-- 查询语句
+查询北京的同学信息，并按id正序排列
+SELECT id,name FROM student WHERE city='北京' ORDER BY id ASC
+
+-- 别名
