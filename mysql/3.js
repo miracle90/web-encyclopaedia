@@ -23,7 +23,14 @@ connection.beginTransaction(function (err) {
           throw err
         } else {
           // 成功提交
-          connection.commit()
+          connection.commit(function(err) {
+            if (err) {
+              return connection.rollback(function() {
+                throw err;
+              });
+            }
+            console.log('事务提交成功！');
+          });
         }
       })
     }
