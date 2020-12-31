@@ -14,3 +14,11 @@ let html = `
 let $ = cheerio.load(html)
 
 console.log($('ul').attr('id'))
+
+$('ul').attr('id', 'hello').attr('class', 'happy')
+
+console.log($.html())
+
+$('ul').removeAttr('class')
+
+console.log($.html())
