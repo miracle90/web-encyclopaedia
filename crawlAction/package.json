@@ -1,0 +1,20 @@
+{
+  "name": "crawlAction",
+  "version": "1.0.0",
+  "description": "",
+  "main": "test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "cheerio": "^1.0.0-rc.5",
+    "debug": "^4.3.1",
+    "mysql": "^2.18.1",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6"
+  }
+}
