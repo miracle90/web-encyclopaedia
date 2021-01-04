@@ -21,7 +21,7 @@ exports.articles = async function(url, tagName) {
     let { tag_id } = idData
     debug(`读取到的标签ID：${tag_id}`)
     let res = await getArticleInfo(tag_id)
-    console.log('getArticleInfo ', res)
+    return res
   }
 }
 
@@ -41,23 +41,29 @@ async function getArticleInfo(id) {
       tag_ids: [id]
     }
   }
-  let { err_no, data } = await request(params)
-  if (err_no === 0) {
-    data.forEach(async item => {
-      const { article_info: { article_id, title }, tags } = item
-      const content = await getArticleContent(article_id)
-      const tagNames = tags.map(item => item.tag_name)
-      articles.push({
-        id: article_id,
-        title,
-        href: `https://juejin.cn/post/${article_id}`,
-        content,
-        tagNames // 标签是一个名字的数组，是一个字符串的数组
-      });
-      debug(`读取文章标签:${title}`);
-    })
-  }
-  return articles
+  return new Promise(async (resolve, reject) => {
+    let { err_no, data } = await request(params)
+    if (err_no === 0) {
+      data.forEach(async item => {
+        const { article_info: { article_id, title }, tags } = item
+        const content = await getArticleContent(article_id)
+        const tagNames = tags.map(item => item.tag_name)
+        articles.push({
+          id: article_id,
+          title,
+          href: `https://juejin.cn/post/${article_id}`,
+          content,
+          tagNames // 标签是一个名字的数组，是一个字符串的数组
+        });
+        if (articles.length === data.length) {
+          resolve(articles)
+        }
+        debug(`读取文章标签:${title}`);
+      })
+    } else {
+      resolve()
+    }
+  })
 }
 
 async function getArticleContent(id) {
