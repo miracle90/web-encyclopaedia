@@ -1,5 +1,5 @@
 let mysql = require('mysql')
-let bluebird = require('bluebird')
+let Promise = require('bluebird')
 
 let connection = mysql.createConnection({
   host: 'localhost',

@@ -1,64 +1,80 @@
-let debug = require('debug')('crawl:read:tags')
+let debug = require('debug')('crawl:read:articles')
 let cheerio = require('cheerio')
 let request = require('request-promise')
 
 exports.articles = async function(url, tagName) {
-  debug(`开始读取${tagName}标签下面的文章列表`)
+  debug(`开始读取-${tagName}-标签下面的文章列表`)
+  // 向服务器发送一个post请求
   let options = {
-    url,
-    // 这是一个转换函数，在request得到响应体之后，会调用这个函数进行转换
-    transform: function(body) {
-      return cheerio.load(body)   // $
+    url: 'https://api.juejin.cn/tag_api/v1/query_tag_detail',
+    method: 'POST',
+    json: true,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: {
+      key_word: tagName
     }
   }
-  let $ = await request(options)
+  let { err_no, data: idData } = await request(options)
+  if (err_no === 0) {
+    let { tag_id } = idData
+    debug(`读取到的标签ID：${tag_id}`)
+    let res = await getArticleInfo(tag_id)
+    console.log('getArticleInfo ', res)
+  }
+}
+
+async function getArticleInfo(id) {
   let articles = []
-  let items = $('.item .title')
-
-  for (let i = 0; i < items.length; i++) {
-    const item = items[i];
-    const $this = $(item)
-    let href = $this.attr('href').trim()      // 取出超链接
-    if (!href.startsWith('/entry')) {
-      let title = $this.text().trim()
-      let id = href.match(/\/(\w+)$/)[1]
-      href = 'https://juejin.cn' + href
-      let { content, tagNames } = await article(id, href)
-      articles.push({
-        id,
-        title,
-        href,
-        content,
-        tagNames
-      })
-      debug(`读取到的文章：${title}`)
+  let params = {
+    url: 'https://api.juejin.cn/recommend_api/v1/article/recommend_tag_feed',
+    method: 'POST',
+    json: true,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: {
+      cursor: '0',
+      id_type: 2,
+      sort_type: 200,
+      tag_ids: [id]
     }
   }
-
-
-  // $('.item').each(function(index, item) {
-  //   let $this = $(this)
-  //   let image = $this.find(div.thumb).first()   // 找到了图片所有的div
-  //   let imageUrl = image.data('src')
-  //   let indexOfSep = imageUrl.indexOf('?')
-  //   if (indexOfSep !== -1) {
-  //     imageUrl = imageUrl.slice(0, indexOfSep)
-  //   }
-  //   let title = $this.find('.title').first()
-  //   let name = title.text().trim()
-  //   let subscribe = $this.find('.subscribe').first()    // 关注
-  //   let article = $this.find('.article').first()        // 文章
-  //   tags.push({
-  //     image: imageUrl,      // 标签的图片地址
-  //     name,                 // 标签名
-  //     url: `https://juejin.cn/tag/${encodeURIComponent(name)}`,
-  //     subscribe: Number(subscribe.text().match(/(\d+)/)[1]),   // 订阅数
-  //     article: Number(article.text().match(/(\d+)/)[1])        // 文章数
-  //   })
-  //   debug(`读取到一个新的标签：${name}`)
-  // })
-  console.log(articles)
+  let { err_no, data } = await request(params)
+  if (err_no === 0) {
+    data.forEach(async item => {
+      const { article_info: { article_id, title }, tags } = item
+      const content = await getArticleContent(article_id)
+      const tagNames = tags.map(item => item.tag_name)
+      articles.push({
+        id: article_id,
+        title,
+        href: `https://juejin.cn/post/${article_id}`,
+        content,
+        tagNames // 标签是一个名字的数组，是一个字符串的数组
+      });
+      debug(`读取文章标签:${title}`);
+    })
+  }
   return articles
 }
 
-// exports.tags('https://juejin.cn/subscribe/all')
+async function getArticleContent(id) {
+  let params = {
+    url: 'https://api.juejin.cn/content_api/v1/article/detail',
+    method: 'POST',
+    json: true,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: {
+      article_id: id
+    }
+  }
+  let { err_no, data } = await request(params)
+  if (err_no === 0) {
+    let { article_info: { mark_content } } = data
+    return mark_content
+  }
+}

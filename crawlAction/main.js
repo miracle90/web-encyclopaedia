@@ -5,9 +5,23 @@ let write = require('./write')
 let tagsUrl = 'https://juejin.cn/subscribe/all'
 
 async function init() {
-  let list = await read.tags(tagsUrl)
-  console.log(list)
-  await write.tags(tags)
+  // 查询所有标签
+  let tagsList = await read.tags(tagsUrl)
+  // 将所有标签写入数据库
+  await write.tags(tagsList)
+  let allArticles = {}
+  for (const tag of tagsList.slice(0, 1)) {
+    // 遍历所有标签的url地址，查询标签下的文章
+    let articles = await read.articles(tag.url, tag.name)
+
+    console.log(articles)
+    
+    // 一个文章可能属于多个标签，去重
+    articles.forEach(item => allArticles[item.id] = item)
+  }
+  // 将文章写入数据库
+  await write.articles(Object.values(allArticles))
+  process.exit()
 }
 
 init()
