@@ -1,0 +1,25 @@
+<%- include('header.html') %>
+  <div class="row">
+    <div class="col-md-3">
+      <ul class="list-group">
+        <%tags.forEach(tag=>{%>
+          <li class="list-group-item">
+            <a href="/?tagId=<%=tag.id%>">
+              <img style="margin-right: 10px; width: 25px; height: 25px;" src="<%=tag.image%>"/>
+              <%=tag.name%>
+            </a>
+          </li>
+        <%})%>
+      </ul>
+    </div>
+    <div class="col-md-9">
+      <ul class="list-group">
+        <%articles.forEach(article=>{%>
+          <li class="list-group-item">
+            <a href="/detail/<%=article.id%>"><%=article.title%></a>
+          </li>
+        <%})%>
+      </ul>
+    </div>
+  </div>
+<%- include('footer.html') %>

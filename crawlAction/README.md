@@ -1,33 +1,8 @@
-## 主要步骤
+## 实现步骤
 
-### 一、爬取数据 + 入库
+### 1、读取数据
 
-```js
-let read = require('./read')
-let write = require('./write')
-
-// 所有标签的列表
-let tagsUrl = 'https://juejin.cn/subscribe/all'
-
-async function init() {
-  // 查询所有标签
-  let tagsList = await read.tags(tagsUrl)
-  // 将所有标签写入数据库
-  await write.tags(tagsList)
-  let allArticles = {}
-  for (const tag of tagsList.slice(0, 1)) {
-    // 遍历所有标签的url地址，查询标签下的文章
-    let articles = await read.articles(tag.url, tag.name)
-
-    console.log(articles)
-    
-    // 一个文章可能属于多个标签，去重
-    articles.forEach(item => allArticles[item.id] = item)
-  }
-  // 将文章写入数据库
-  await write.articles(Object.values(allArticles))
-  process.exit()
-}
-
-init()
-```
+1. 读取所有的标签
+2. 读取标签下的文章以及文章和标签的关系
+3. 保存标签文章以及他们之间的关系
+4. 建一个web服务器，向用户展示数据
