@@ -1,0 +1,79 @@
+<%- include('header.html') %>
+  <style>
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+    .tag {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    .tag img {
+      margin-bottom: 20px;
+      width: 80px;
+      height: 80px;
+    }
+    .follow {
+      width: 68px;
+      height: 26px;
+      line-height: 26px;
+      border: 1px solid #37c700;
+      background-color: #fff;
+      color: #37c700;
+      text-align: center;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+
+  <div class="row">
+    <form method="POST">
+      <%
+        for (let i = 0; i < tags.length; i++) {
+          let tag = tags[i]%>
+          <div class="col-md-3 tag">
+            <img src="<%=tag.image%>" alt="">
+            <p><%=tag.name%></p>
+            <p>
+              <%=tag.subscribe%>&nbsp;关注&nbsp;&nbsp;&nbsp;<%=tag.article%>&nbsp;文章
+            </p>
+            <div class="follow" data-id="<%=tag.id%>" data-checked="<%=tag.checked%>"  <%=tag.checked === 'true' ? 'style=background-color:#37c700;color:#fff;' : ''%>>关注</div>
+          </div>
+        <%}
+      %>
+    </form>
+  </div>
+
+  <script>
+    const list = document.getElementsByClassName('follow')
+    for (const key in list) {
+      const element = list[key];
+      if (typeof element === 'object') {
+        element.addEventListener('click', e => {
+          const { id, checked } = e.target.dataset
+          let xhr = new XMLHttpRequest()
+          xhr.open('POST', '/subscribe', true)
+          xhr.setRequestHeader('content-type', 'application/json');
+          xhr.send(JSON.stringify({
+            id,
+            checked: checked === 'true' ? 'false' : 'true'
+          }))
+          xhr.onload = function () {
+            console.log('onload', this.status, this.readyState)
+            if (this.status === 200) {
+              location.reload()
+            }
+          }
+          // xhr.onreadystatechange = function() {
+          //   console.log(xhr.readyState)
+          //   console.log(xhr.getResponseHeader('content-type'))
+          // }
+        })
+      }
+    }
+  </script>
+<%- include('footer.html') %>

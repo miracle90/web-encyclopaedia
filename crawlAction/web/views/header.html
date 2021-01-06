@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title><%=title%></title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
 </head>
 <body>
@@ -15,8 +15,11 @@
     <div>
       <ul class="nav navbar-nav">
         <li><a href="/">首页</a></li>
-        <li><a href="/login">登录</a></li>
-        <li><a href="/subscribe">订阅</a></li>
+        <% if (user) { %>
+          <li><a href="/subscribe">订阅</a></li>
+        <% } else { %>
+          <li><a href="/login">登录</a></li>
+        <% } %>
       </ul>
     </div>
   </div>

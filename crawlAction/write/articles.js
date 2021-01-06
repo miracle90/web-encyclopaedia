@@ -1,6 +1,8 @@
 const query = require('../db')
 const debug1 = require('debug')('crawl:write:articles')
 const debug2 = require('debug')('crawl:write:article_tag')
+const debug3 = require('debug')('crawl:发送邮件')
+const sendMail = require('../mail')
 
 // 保存文章的详情
 // 保存文章和标签的关系
@@ -33,6 +35,16 @@ let articles = async function(articleList) {
       for (const row of tagIds) {
         await query(`INSERT INTO article_tag(article_id, tag_id) VALUES(?, ?)`, [article.id, row.id])
         debug2(`成功保存文章-标签关系：${article.id} -- ${row.id}`)
+      }
+      // 发送邮件
+      // 像订阅了此标签的用户发送邮件
+      let tagIdsString = tagIds.map(item => item.id).join(',')
+      // distinct 去重
+      let emailSql = `SELECT distinct users.email FROM user_tag FROM user_tag INNER JOIN users ON user_tag.user_id = users.id WHERE tag_id IN (${tagIdsString})`
+      const emails = await query(emailSql)
+      for (let i = 0; i < emails.length; i++) {
+        debug3(`${emails[i].email} -- ${article.title}`)
+        sendMail(emails[i].email, `你订阅的文章更新了`, `<a href="http://localhost:3000/detail/${article.id}">${article.title}</a>`)
       }
     }
   } catch (error) {
