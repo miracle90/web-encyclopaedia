@@ -104,6 +104,7 @@
 * 垃圾回收机制
 
 > [图解浏览器的基本工作原理](https://zhuanlan.zhihu.com/p/47407398)
+> [V8 引擎垃圾回收与内存分配](https://juejin.cn/post/6909239354418266119)
 
 ### typescript
 
@@ -182,7 +183,6 @@
 
 * service worker
 * 消息推送
-* 
 
 ### 算法 & 数据结构
 
