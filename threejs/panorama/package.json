@@ -1,0 +1,12 @@
+{
+  "name": "panoramagram",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:miracle90/hop-to-hop.git",
+  "author": "李亚运(11112733) <11112733@vivo.xyz>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mime": "^2.4.7"
+  }
+}
