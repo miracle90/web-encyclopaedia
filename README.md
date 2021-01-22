@@ -1,5 +1,34 @@
 ## 架构师
 
+### 复习排期
+
+* html/css/js 3
+* Flutter、React Native 20
+* webpack 5
+* docker、nginx、Jenkins、Linux 7
+* node、express、koa、eggjs 7
+* vue 5
+* react 5
+* 微信小程序 1
+* 快应用 2
+* taro 1
+* 服务端渲染 2
+* typescript 2
+* 数据库 mysql、mongodb、redis 2
+* 浏览器 2
+* 网络 2
+* web安全 2
+* 手写代码 5
+* threejs、canvas等 2
+* 算法&数据结构 长期
+* 微前端、PWA、WebAssembly、webRTC 2
+* 性能优化 3
+* 前端监控 2
+* 设计模式 2
+* 工程化、组件化（BFF、VNG、VFC） 2
+* 团队管理（git、团队建设） 1
+
+
 ### 进阶顺序
 
 * 1. node
