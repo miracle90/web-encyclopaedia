@@ -671,9 +671,37 @@ void main() {
 
 ## 类
 
+Dart 是支持基于 mixin 继承机制的面向对象语言，所有对象都是一个类的实例，而所有的类都继承自 Object 类。基于 mixin 的继承 意味着每个除 Object 类之外的类都只有一个超类，一个类的代码可以在其它多个类继承中重复使用。 Extension 方法 是一种在不更改类或创建子类的情况下向类添加功能的方式。
+
+使用 ?. 代替 . 可以避免因为左边表达式为 null 而导致的问题：
+
+```dart
+// If p is non-null, set a variable equal to its y value.
+var a = p?.y;
+```
+
+一些类提供了常量构造函数。使用常量构造函数，在构造函数名之前加 const 关键字，来创建编译时常量时：
+
 ## 泛型
 
 如果你查看数组的 API 文档，你会发现数组 List 的实际类型为 List<E>。 <…> 符号表示数组是一个 泛型（或 参数化类型） 通常 使用一个字母来代表类型参数，比如E、T、S、K 和 V 等等。
+
+```dart
+var p = const ImmutablePoint(2, 2);
+```
+
+两个使用相同构造函数相同参数值构造的编译时常量是同一个对象：
+
+```dart
+var a = const ImmutablePoint(1, 1);
+var b = const ImmutablePoint(1, 1);
+
+assert(identical(a, b)); // 它们是同一个实例 (They are the same instance!)
+```
+
+
+
+
 
 ### 为什么使用泛型？
 
