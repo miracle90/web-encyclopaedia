@@ -682,6 +682,544 @@ var a = p?.y;
 
 一些类提供了常量构造函数。使用常量构造函数，在构造函数名之前加 const 关键字，来创建编译时常量时：
 
+```dart
+var p = const ImmutablePoint(2, 2);
+```
+
+两个使用相同构造函数相同参数值构造的编译时常量是同一个对象：
+
+```dart
+var a = const ImmutablePoint(1, 1);
+var b = const ImmutablePoint(1, 1);
+
+assert(identical(a, b)); // 它们是同一个实例 (They are the same instance!)
+```
+
+### 获取对象的类型
+
+可以使用 Object 对象的 runtimeType 属性在运行时获取一个对象的类型，该对象类型是 Type 的实例。
+
+```dart
+print('The type of a is ${a.runtimeType}');
+```
+
+### 构造函数
+
+声明一个与类名一样的函数即可声明一个构造函数（对于命名式构造函数 还可以添加额外的标识符）。大部分的构造函数形式是生成式构造函数，其用于创建一个类的实例：
+
+```dart
+class Point {
+  double x, y;
+
+  Point(double x, double y) {
+    // 还会有更好的方式来实现此逻辑，敬请期待。
+    this.x = x;
+    this.y = y;
+  }
+}
+```
+
+使用 this 关键字引用当前实例。
+
+> 当且仅当命名冲突时使用 this 关键字才有意义，否则 Dart 会忽略 this 关键字。
+
+对于大多数编程语言来说在构造函数中为实例变量赋值的过程都是类似的，而 Dart 则提供了一种特殊的语法糖来简化该步骤：
+
+```dart
+class Point {
+  double x, y;
+
+  // 在构造函数体执行前用于设置 x 和 y 的语法糖。
+  Point(this.x, this.y);
+}
+```
+
+#### 默认构造函数
+
+如果你没有声明构造函数，那么 Dart 会自动生成一个无参数的构造函数并且该构造函数会调用其父类的无参数构造方法。
+
+#### 构造函数不被继承
+
+子类不会继承父类的构造函数，如果子类没有声明构造函数，那么只会有一个默认无参数的构造函数。
+
+#### 命名式构造函数
+
+可以为一个类声明多个命名式构造函数来表达更明确的意图：
+
+```dart
+class Point {
+  double x, y;
+
+  Point(this.x, this.y);
+
+  // 命名式构造函数
+  Point.origin() {
+    x = 0;
+    y = 0;
+  }
+}
+```
+
+记住构造函数是不能被继承的，这将意味着子类不能继承父类的命名式构造函数，如果你想在子类中提供一个与父类命名构造函数名字一样的命名构造函数，则需要在子类中显式地声明。
+
+#### 调用父类非默认构造函数
+
+默认情况下，子类的构造函数会调用父类的匿名无参数构造方法，并且该调用会在子类构造函数的函数体代码执行前，如果子类构造函数还有一个 初始化列表，那么该初始化列表会在调用父类的该构造函数之前被执行，总的来说，这三者的调用顺序如下：
+
+1. 初始化列表
+2. 父类的无参数构造函数
+3. 当前类的构造函数
+
+如果父类没有匿名无参数构造函数，那么子类必须调用父类的其中一个构造函数，为子类的构造函数指定一个父类的构造函数只需在构造函数体前使用（:）指定。
+
+下面的示例中，Employee 类的构造函数调用了父类 Person 的命名构造函数。
+
+```dart
+class Person {
+  String firstName;
+
+  Person.fromJson(Map data) {
+    print('in Person');
+  }
+}
+
+class Employee extends Person {
+  // Person does not have a default constructor;
+  // you must call super.fromJson(data).
+  Employee.fromJson(Map data) : super.fromJson(data) {
+    print('in Employee');
+  }
+}
+
+main() {
+  var emp = new Employee.fromJson({});
+
+  // Prints:
+  // in Person
+  // in Employee
+  if (emp is Person) {
+    // Type check
+    emp.firstName = 'Bob';
+  }
+  (emp as Person).firstName = 'Bob';
+}
+```
+
+因为参数会在子类构造函数被执行前传递给父类的构造函数，因此该参数也可以是一个表达式，比如一个函数：
+
+```dart
+class Employee extends Person {
+  Employee() : super.fromJson(defaultData);
+  // ···
+}
+```
+
+> 传递给父类构造函数的参数不能使用 this 关键字，因为在参数传递的这一步骤，子类构造函数尚未执行，子类的实例对象也就还未初始化，因此所有的实例成员都不能被访问，但是类成员可以。
+
+#### 初始化列表
+
+除了调用父类构造函数之外，还可以在构造函数体执行之前初始化实例变量。每个实例变量之间使用逗号分隔。
+
+```dart
+// Initializer list sets instance variables before
+// the constructor body runs.
+// 使用初始化列表在构造函数体执行前设置实例变量。
+Point.fromJson(Map<String, double> json) : x = json['x'], y = json['y'] {
+  print('In Point.fromJson(): ($x, $y)');
+}
+```
+
+> 初始化列表表达式 = 右边的语句不能使用 this 关键字。
+
+在开发模式下，你可以在初始化列表中使用 assert 来验证输入数据：
+
+```dart
+Point.withAssert(this.x, this.y) : assert(x >= 0) {
+  print('In Point.withAssert(): ($x, $y)');
+}
+```
+
+初始化列表用来设置 final 字段是非常好用的，下面的示例中就使用初始化列表来设置了三个 final 变量的值。
+
+```dart
+import 'dart:math';
+
+class Point {
+  final num x;
+  final num y;
+  final num distanceFromOrigin;
+
+  Point(x, y) : x = x, y = y, distanceFromOrigin = sqrt(x * x + y * y);
+}
+
+main() {
+  var p = new Point(2, 3);
+  print(p.distanceFromOrigin);
+}
+```
+
+#### 重定向构造函数
+
+有时候类中的构造函数会调用类中其它的构造函数，该重定向构造函数没有函数体，只需在函数签名后使用（:）指定需要重定向到的其它构造函数即可：
+
+```dart
+class Point {
+  double x, y;
+
+  // 该类的主构造函数。
+  Point(this.x, this.y);
+
+  // 委托实现给主构造函数。
+  Point.alongXAxis(double x) : this(x, 0);
+}
+```
+
+#### 常量构造函数
+
+如果类生成的对象都是不会变的，那么可以在生成这些对象时就将其变为编译时常量。你可以在类的构造函数前加上 const 关键字并确保所有实例变量均为 final 来实现该功能。
+
+```dart
+class ImmutablePoint {
+  static final ImmutablePoint origin =
+      const ImmutablePoint(0, 0);
+
+  final double x, y;
+
+  const ImmutablePoint(this.x, this.y);
+}
+```
+
+#### 工厂构造函数
+
+使用 factory 关键字标识类的构造函数将会令该构造函数变为工厂构造函数，这将意味着使用该构造函数构造类的实例时并非总是会返回新的实例对象。例如，工厂构造函数可能会从缓存中返回一个实例，或者返回一个子类型的实例。
+
+在如下的示例中， Logger 的工厂构造函数从缓存中返回对象，和 Logger.fromJson 工厂构造函数从 JSON 对象中初始化一个最终变量。
+
+```dart
+class Logger {
+  final String name;
+  bool mute = false;
+
+  // _cache 变量是库私有的，因为在其名字前面有下划线。
+  static final Map<String, Logger> _cache =
+      <String, Logger>{};
+
+  factory Logger(String name) {
+    return _cache.putIfAbsent(
+        name, () => Logger._internal(name));
+  }
+
+  factory Logger.fromJson(Map<String, Object> json) {
+    return Logger(json['name'].toString());
+  }
+
+  Logger._internal(this.name);
+
+  void log(String msg) {
+    if (!mute) print(msg);
+  }
+}
+```
+
+> 在工厂构造函数中无法访问 this。
+
+工厂构造函的调用方式与其他构造函数一样：
+
+```dart
+var logger = Logger('UI');
+logger.log('Button clicked');
+
+var logMap = {'name': 'UI'};
+var loggerJson = Logger.fromJson(logMap);
+```
+
+### 方法
+
+方法是对象提供行为的函数。
+
+#### 实例方法
+
+对象的实例方法可以访问实例变量和 this。下面的 distanceTo() 方法就是一个实例方法的例子：
+
+```dart
+import 'dart:math';
+
+class Point {
+  double x, y;
+
+  Point(this.x, this.y);
+
+  double distanceTo(Point other) {
+    var dx = x - other.x;
+    var dy = y - other.y;
+    return sqrt(dx * dx + dy * dy);
+  }
+}
+```
+
+#### Getter 和 Setter
+
+Getter 和 Setter 是一对用来读写对象属性的特殊方法，上面说过实例对象的每一个属性都有一个隐式的 Getter 方法，如果为非 final 属性的话还会有一个 Setter 方法，你可以使用 get 和 set 关键字为额外的属性添加 Getter 和 Setter 方法：
+
+```dart
+class Rectangle {
+  double left, top, width, height;
+
+  Rectangle(this.left, this.top, this.width, this.height);
+
+  // 定义两个计算产生的属性：right 和 bottom。
+  double get right => left + width;
+  set right(double value) => left = value - width;
+  double get bottom => top + height;
+  set bottom(double value) => top = value - height;
+}
+
+void main() {
+  var rect = Rectangle(3, 4, 20, 15);
+  assert(rect.left == 3);
+  rect.right = 12;
+  assert(rect.left == -8);
+}
+```
+
+使用 Getter 和 Setter 的好处是，你可以先使用你的实例变量，过一段时间过再将它们包裹成方法且不需要改动任何代码，即先定义后更改且不影响原有逻辑。
+
+> 像自增（++）这样的操作符不管是否定义了 Getter 方法都会正确地执行。为了避免一些不必要的异常情况，运算符只会调用 Getter 一次，然后将其值存储在一个临时变量中。
+
+#### 抽象方法
+
+实例方法、Getter 方法以及 Setter 方法都可以是抽象的，定义一个接口方法而不去做具体的实现让实现它的类去实现该方法，抽象方法只能存在于 抽象类中。
+
+直接使用分号（;）替代方法体即可声明一个抽象方法：
+
+```dart
+abstract class Doer {
+  // 定义实例变量和方法等等……
+
+  void doSomething(); // 定义一个抽象方法。
+}
+
+class EffectiveDoer extends Doer {
+  void doSomething() {
+    // 提供一个实现，所以在这里该方法不再是抽象的……
+  }
+}
+```
+
+### 抽象类
+
+使用关键字 abstract 标识类可以让该类成为 抽象类，抽象类将无法被实例化。抽象类常用于声明接口方法、有时也会有具体的方法实现。如果想让抽象类同时可被实例化，可以为其定义 工厂构造函数。
+
+抽象类常常会包含 抽象方法。下面是一个声明具有抽象方法的抽象类示例：
+
+```dart
+// This class is declared abstract and thus
+// can't be instantiated.
+// 该类被声明为抽象的，因此它不能被实例化。
+abstract class AbstractContainer {
+  // 定义构造函数、字段、方法等……
+
+  void updateChildren(); // 抽象方法。
+}
+```
+
+### 隐式接口
+
+每一个类都隐式地定义了一个接口并实现了该接口，这个接口包含所有这个类的实例成员以及这个类所实现的其它接口。如果想要创建一个 A 类支持调用 B 类的 API 且不想继承 B 类，则可以实现 B 类的接口。
+
+一个类可以通过关键字 implements 来实现一个或多个接口并实现每个接口定义的 API：
+
+```dart
+// A person. The implicit interface contains greet().
+// Person 类的隐式接口中包含 greet() 方法。
+class Person {
+  // _name 变量同样包含在接口中，但它只是库内可见的。
+  final _name;
+
+  // 构造函数不在接口中。
+  Person(this._name);
+
+  // greet() 方法在接口中。
+  String greet(String who) => '你好，$who。我是$_name。';
+}
+
+// Person 接口的一个实现。
+class Impostor implements Person {
+  get _name => '';
+
+  String greet(String who) => '你好$who。你知道我是谁吗？';
+}
+
+String greetBob(Person person) => person.greet('小芳');
+
+void main() {
+  print(greetBob(Person('小芸')));
+  print(greetBob(Impostor()));
+}
+```
+
+如果需要实现多个类接口，可以使用逗号分割每个接口类：
+
+```dart
+class Point implements Comparable, Location {...}
+```
+
+### 扩展一个类
+
+使用 extends 关键字来创建一个子类，并可使用 super 关键字引用一个父类：
+
+```dart
+class Television {
+  void turnOn() {
+    _illuminateDisplay();
+    _activateIrSensor();
+  }
+  // ···
+}
+
+class SmartTelevision extends Television {
+  void turnOn() {
+    super.turnOn();
+    _bootNetworkInterface();
+    _initializeMemory();
+    _upgradeApps();
+  }
+  // ···
+}
+```
+
+#### 重写类成员
+
+子类可以重写父类的实例方法（包括 操作符）、 Getter 以及 Setter 方法。你可以使用 @override 注解来表示你重写了一个成员：
+
+```dart
+class SmartTelevision extends Television {
+  @override
+  void turnOn() {...}
+  // ···
+}
+```
+
+> 如果重写 == 操作符，必须也同时重写对象 hashCode 的 Getter 方法。你可以查阅 实现映射键 获取更多关于重写的 == 和 hashCode 的例子。
+
+### Extension 方法
+
+Dart 2.7 中引入的 Extension 方法是向现有库添加功能的一种方式。你可能甚至都不知道有 Extension 方法。例如，当您在 IDE 中使用代码完成功能时，它建议将 Extension 方法与常规方法一起使用。
+
+这里是一个在 String 中使用 extension 方法的样例，我们取名为 parseInt()，它在 string_apis.dart 中定义：
+
+```dart
+import 'string_apis.dart';
+...
+print('42'.padLeft(5)); // Use a String method.
+print('42'.parseInt()); // Use an extension method.
+```
+
+### 枚举类型
+
+枚举类型是一种特殊的类型，也称为 enumerations 或 enums，用于定义一些固定数量的常量值。
+
+### 使用枚举
+
+使用关键字 enum 来定义枚举类型：
+
+```dart
+enum Color { red, green, blue }
+```
+
+### 使用 Mixin 为类添加功能
+
+Mixin 是一种在多重继承中复用某个类中代码的方法模式。
+
+使用 with 关键字并在其后跟上 Mixin 类的名字来使用 Mixin 模式：
+
+```dart
+class Musician extends Performer with Musical {
+  // ···
+}
+
+class Maestro extends Person with Musical, Aggressive, Demented {
+  Maestro(String maestroName) {
+    name = maestroName;
+    canConduct = true;
+  }
+}
+```
+
+定义一个类继承自 Object 并且不为该类定义构造函数，这个类就是 Mixin 类，除非你想让该类与普通的类一样可以被正常地使用，否则可以使用关键字 mixin 替代 class 让其成为一个单纯的 Mixin 类：
+
+```dart
+mixin Musical {
+  bool canPlayPiano = false;
+  bool canCompose = false;
+  bool canConduct = false;
+
+  void entertainMe() {
+    if (canPlayPiano) {
+      print('Playing piano');
+    } else if (canConduct) {
+      print('Waving hands');
+    } else {
+      print('Humming to self');
+    }
+  }
+}
+```
+
+> mixin 关键字在 Dart 2.1 中才被引用支持。早期版本中的代码通常使用 abstract class 代替。你可以查阅 Dart SDK 变更日志 和 2.1 mixin 规范 获取更多有关 Mixin 在 2.1 中的变更信息。
+
+### 类变量和方法
+
+使用关键字 static 可以声明类变量或类方法。
+
+#### 静态变量
+
+静态变量（即类变量）常用于声明类范围内所属的状态变量和常量：
+
+```dart
+class Queue {
+  static const initialCapacity = 16;
+  // ···
+}
+
+void main() {
+  assert(Queue.initialCapacity == 16);
+}
+```
+
+静态变量在其首次被使用的时候才被初始化。
+
+#### 静态方法
+
+静态方法（即类方法）不能对实例进行操作，因此不能使用 this，但是他们可以访问静态变量。如下面的例子所示，你可以在一个类上直接调用静态方法：
+
+```dart
+import 'dart:math';
+
+class Point {
+  double x, y;
+  Point(this.x, this.y);
+
+  static double distanceBetween(Point a, Point b) {
+    var dx = a.x - b.x;
+    var dy = a.y - b.y;
+    return sqrt(dx * dx + dy * dy);
+  }
+}
+
+void main() {
+  var a = Point(2, 2);
+  var b = Point(4, 4);
+  var distance = Point.distanceBetween(a, b);
+  assert(2.8 < distance && distance < 2.9);
+  print(distance);
+}
+```
+
+> 对于一些通用或常用的静态方法，应该将其定义为顶级函数而非静态方法。
+
+可以将静态方法作为编译时常量。例如，你可以将静态方法作为一个参数传递给一个常量构造函数。
+
 ## 泛型
 
 如果你查看数组的 API 文档，你会发现数组 List 的实际类型为 List<E>。 <…> 符号表示数组是一个 泛型（或 参数化类型） 通常 使用一个字母来代表类型参数，比如E、T、S、K 和 V 等等。
@@ -698,10 +1236,6 @@ var b = const ImmutablePoint(1, 1);
 
 assert(identical(a, b)); // 它们是同一个实例 (They are the same instance!)
 ```
-
-
-
-
 
 ### 为什么使用泛型？
 
