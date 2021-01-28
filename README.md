@@ -1,6 +1,6 @@
 ## 架构师
 
-### 复习排期
+### 排期
 
 * html/css/js 3
 * Flutter、React Native 20
