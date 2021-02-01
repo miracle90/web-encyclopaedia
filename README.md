@@ -56,6 +56,8 @@
 
 ### vue
 
+> [揭秘 Vue.js 九个性能优化技巧](https://juejin.cn/post/6922641008106668045?utm_source=gold_browser_extension)
+
 ### vue3.0
 
 * 性能提升
