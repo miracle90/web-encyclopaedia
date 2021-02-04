@@ -225,7 +225,7 @@
 * service worker
 * 消息推送
 
-### 算法 & 数据结构
+### [算法 & 数据结构](https://github.com/miracle90/web-encyclopaedia/tree/master/algorithm-dataStructrue)
 
 数据结构
 
